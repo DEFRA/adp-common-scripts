@@ -1,0 +1,60 @@
+parameters:
+- name: deployFromFeature
+  displayName: "Deploy from Feature Branch"
+  type: boolean
+  default: false
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - test-output/*
+      - bin/*
+      - obj/*
+  drafts: false
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - "*"
+  paths:
+    exclude:
+      - test-output/*
+      - bin/*
+      - obj/*
+
+resources:
+  repositories:
+    - repository: DEFRA-ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: refs/heads/main
+
+extends:
+  template: /pipelines/common-app-build.yaml@DEFRA-ADPPipelineCommon
+  parameters:
+    projectName: "adp-common-scripts"
+    serviceName: "adp-common-scripts"
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    appBuildConfig:
+      appFrameworkType: "nodejs"    
+      projectPath: "./package.json"
+      manifestPath: "./package.json"
+      imageRepoName: "adp-common-scripts"
+    appTestConfig:
+      testFilePath: "./docker-compose.test.yaml"
+    appDeployConfig:
+      filepath: "./appConfig"  
+      filetype: "yaml"
+
+      # TO BE ADDED IF THERE ARE ANY KEYVAULT REFERENCES IN APP CONFIG
+      # variableGroups: 
+      #   - adp-common-scripts-snd1
+      #   - adp-common-scripts-snd2
+      #   - adp-common-scripts-snd3
+      # variables:
+      #   - adp-common-scripts-APPINSIGHTS-CONNECTIONSTRING

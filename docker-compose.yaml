@@ -1,0 +1,10 @@
+services:
+  adp-common-scripts:
+    build:
+      context: .
+      target: production
+    image: adp-common-scripts
+    container_name: adp-common-scripts
+    environment:
+      APPINSIGHTS_CLOUDROLE: adp-common-scripts-local
+      APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}

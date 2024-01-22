@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: adp-common-scripts
+  description: ADP Common scripts
+  annotations:
+    github.com/project-slug: DEFRA/adp-common-scripts
+    dev.azure.com/build-definition: DEFRA.adp-common-scripts
+    sonarqube.org/project-key: adp-common-scripts
+    grafana/dashboard-selector: "folderTitle == 'Managed Prometheus'"
+spec:
+  type: backend
+  lifecycle: beta
+  owner: "group:default/adp"
