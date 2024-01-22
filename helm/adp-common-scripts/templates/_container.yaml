@@ -1,2 +1,0 @@
-{{- define "adp-common-scripts.container" -}}
-{{- end -}}

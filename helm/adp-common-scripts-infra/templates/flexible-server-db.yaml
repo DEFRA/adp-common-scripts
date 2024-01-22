@@ -1,4 +1,0 @@
-{{- include "adp-aso-helm-library.flexible-servers-db" (list . "adp-common-scripts.flexible-servers-db") -}}
-
-{{- define "adp-common-scripts.flexible-servers-db" }}
-{{ end -}}
