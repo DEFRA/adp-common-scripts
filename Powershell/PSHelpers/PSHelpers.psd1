@@ -1,10 +1,10 @@
 #
-# Module manifest for module 'ps-helpers'
+# Module manifest for module 'PSHelpers'
 
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'ps-helpers'
+    RootModule        = 'PSHelpers'
     
     # Version number of this module.
     ModuleVersion     = '0.0.1'
