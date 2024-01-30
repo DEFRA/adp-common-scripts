@@ -1,3 +1,0 @@
-services:
-  adp-common-scripts:
-    command: npm run start:debug

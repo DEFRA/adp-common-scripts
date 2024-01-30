@@ -1,8 +1,0 @@
-{{- include "adp-helm-library.deployment" (list . "adp-common-scripts.deployment") -}}
-{{- define "adp-common-scripts.deployment" -}}
-spec:
-  template:
-    spec:
-      containers:
-      - {{ include "adp-helm-library.container" (list . "adp-common-scripts.container") }}
-{{- end -}}
