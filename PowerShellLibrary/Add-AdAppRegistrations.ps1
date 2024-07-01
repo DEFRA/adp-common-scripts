@@ -261,7 +261,7 @@ Function Set-AadApp {
     }
     else {
         $applicationJson.Add("optionalClaims", @{})
-        $applicationJson.Add("groupMembershipClaims", "")
+        #$applicationJson.Add("groupMembershipClaims", "")
     }
     $notes = Get-SecretRenewalNotes -app $app
     $applicationJson.Add("notes", $notes)
