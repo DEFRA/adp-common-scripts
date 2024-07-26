@@ -32,5 +32,6 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/heads/main
+      #ref: refs/heads/main
+      ref: sm/xxxx/FederatedServiceConnection
 
