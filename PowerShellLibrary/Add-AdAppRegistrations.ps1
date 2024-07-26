@@ -350,15 +350,9 @@ Function Set-AadApp {
         Invoke-RestMethod -Method Patch -Headers $headers -Uri "$applicationsUri/$($application.id)" -Body ($patchBody | ConvertTo-Json -Depth 100) | Out-Null
     }
 
-    $params = @{
-        name = "testing02"
-        issuer = "https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46"
-        subject = "sc://defragovuk/DEFRA-FFC/test"
-        audiences = @("api://AzureADTokenExchange")
-    }
-    
-    $applicationId = "bd055de4-122a-45ed-bccd-79d950d069ed"
-    New-MgApplicationFederatedIdentityCredential -ApplicationId $applicationId -BodyParameter $params
+    $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing02' -Subject 'sc://defragovuk/DEFRA-FFC/test'
+
 }
 
 Function Get-AppRegRenewalAppServicePrincipalId {
