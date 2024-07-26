@@ -350,8 +350,44 @@ Function Set-AadApp {
         Invoke-RestMethod -Method Patch -Headers $headers -Uri "$applicationsUri/$($application.id)" -Body ($patchBody | ConvertTo-Json -Depth 100) | Out-Null
     }
 
-    $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-    New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing01' -Subject 'sc://defragovuk/DEFRA-FFC/WQEWQ'
+    #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    #New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing01' -Subject 'sc://defragovuk/DEFRA-FFC/WQEWQ'
+
+    # Define Azure DevOps variables
+    $spiname = "ADO-DefraGovUK-ADP-SND1-ContUAA"
+    $appId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    $subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
+    $subsName = "AZD-ADP-SND1"
+    $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
+    $organization = "defragovuk"
+    $project = "DEFRA-FFC"
+    $serviceConnectionName = "test"
+
+    # Define the service connection configuration
+    $serviceConnectionConfig = @{
+        "name" = $serviceConnectionName
+        "type" = "azuresp"
+        "url" = "https://management.azure.com/"
+        "authorization" = @{
+            "parameters" = @{
+                "tenantid" = $tenantId
+                "serviceprincipalid" = $appId
+                "authenticationType" = "spnKey"
+            }
+            "scheme" = "ServicePrincipal"
+        }
+        "data" = @{
+            "subscriptionId" = $subscriptionId
+            "subscriptionName" = $subsName
+        }
+    }
+
+    # Convert configuration to JSON
+    $serviceConnectionConfigJson = $serviceConnectionConfig | ConvertTo-Json -Depth 10
+
+    # Create the service connection
+    az devops service-endpoint create --organization https://dev.azure.com/$organization --project $project --service-endpoint-configuration $serviceConnectionConfigJson
+
 
 }
 
