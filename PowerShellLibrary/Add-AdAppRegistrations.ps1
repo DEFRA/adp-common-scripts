@@ -516,25 +516,12 @@ Function Add-FederatedCredential() {
         [string]$graphApiversion = "v1.0"
     )
 
-    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
-
-    #$appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
-    #Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
-    #$appObjectId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
-    #$appObjectId = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId -AsPlainText
-    #Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
-
-    #$servicePrincipal = Get-AzADServicePrincipal -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
-    $servicePrincipal = Get-AzADApplication -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
-    #$servicePrincipal.ObjectId
-
-    #$appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
-
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND1-ContUAA '$servicePrincipal.id'"
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json   
 
     foreach ($app in $apps.applications) {
-        #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-        New-AzADAppFederatedCredential -ApplicationObjectId $servicePrincipal.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+        $appReg = Get-AzADApplication -DisplayName $app.displayName
+        Write-Host "The Object Id of $app.displayName is $appReg.id "
+        New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
     }
 }
 
