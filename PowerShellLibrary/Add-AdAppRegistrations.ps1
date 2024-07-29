@@ -348,12 +348,7 @@ Function Set-AadApp {
 
         Write-Output "Updating Required Resource Access of '$($app.displayName)'"
         Invoke-RestMethod -Method Patch -Headers $headers -Uri "$applicationsUri/$($application.id)" -Body ($patchBody | ConvertTo-Json -Depth 100) | Out-Null
-    }
-
-    #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-    #New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing04' -Subject 'sc://defragovuk/DEFRA-FFC/WorkloadIdentityFederation-svc2'
-
-    
+    }    
 }
 
 Function Get-AppRegRenewalAppServicePrincipalId {
@@ -522,10 +517,14 @@ Function Add-FederatedCredential() {
     )
 
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
+
+    $appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
+    Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
+
     
     foreach ($app in $apps.applications) {
         $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-        New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+        #New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
     }
 }
 
@@ -538,4 +537,4 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-#Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
