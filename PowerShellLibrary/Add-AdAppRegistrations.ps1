@@ -525,12 +525,12 @@ Function Add-FederatedCredential() {
     #Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
 
     #$servicePrincipal = Get-AzADServicePrincipal -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
-    $servicePrincipal = Get-AzADServicePrincipal -ServicePrincipalName ADO-DefraGovUK-ADP-SND1-ContUAA
+    $servicePrincipal = Get-AzADApplication -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
     #$servicePrincipal.ObjectId
 
     #$appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
 
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$servicePrincipal'"
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND1-ContUAA '$servicePrincipal'"
 
     foreach ($app in $apps.applications) {
         #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
