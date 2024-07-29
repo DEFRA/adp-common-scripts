@@ -518,8 +518,8 @@ Function Add-FederatedCredential() {
 
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
 
-    $appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
-    Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
+    #$appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
+    #Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
 
     
     foreach ($app in $apps.applications) {
@@ -537,4 +537,4 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+#Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
