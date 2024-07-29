@@ -524,7 +524,8 @@ Function Add-FederatedCredential() {
     #$appObjectId = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId -AsPlainText
     #Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
 
-    $servicePrincipal = Get-AzADServicePrincipal -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
+    #$servicePrincipal = Get-AzADServicePrincipal -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
+    $servicePrincipal = Get-AzADServicePrincipal -ServicePrincipalName ADO-DefraGovUK-ADP-SND1-ContUAA
     #$servicePrincipal.ObjectId
 
     #$appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
