@@ -524,13 +524,16 @@ Function Add-FederatedCredential() {
     #$appObjectId = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId -AsPlainText
     #Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
 
-    $appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
+    $servicePrincipal = Get-AzADServicePrincipal -DisplayName ADO-DefraGovUK-ADP-SND1-ContUAA
+    #$servicePrincipal.ObjectId
 
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$appObjectId'"
+    #$appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
+
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$servicePrincipal.ObjectId'"
 
     foreach ($app in $apps.applications) {
         #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-        New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+        New-AzADAppFederatedCredential -ApplicationObjectId $servicePrincipal.ObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
     }
 }
 
