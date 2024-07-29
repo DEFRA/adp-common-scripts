@@ -530,11 +530,11 @@ Function Add-FederatedCredential() {
 
     #$appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
 
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND1-ContUAA '$servicePrincipal'"
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND1-ContUAA '$servicePrincipal.id'"
 
     foreach ($app in $apps.applications) {
         #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-        New-AzADAppFederatedCredential -ApplicationObjectId $servicePrincipal.ObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+        New-AzADAppFederatedCredential -ApplicationObjectId $servicePrincipal.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
     }
 }
 
