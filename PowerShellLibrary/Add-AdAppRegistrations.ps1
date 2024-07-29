@@ -350,8 +350,8 @@ Function Set-AadApp {
         Invoke-RestMethod -Method Patch -Headers $headers -Uri "$applicationsUri/$($application.id)" -Body ($patchBody | ConvertTo-Json -Depth 100) | Out-Null
     }
 
-    $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-    New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing04' -Subject 'sc://defragovuk/DEFRA-FFC/WorkloadIdentityFederation-svc2'
+    #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    #New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing04' -Subject 'sc://defragovuk/DEFRA-FFC/WorkloadIdentityFederation-svc2'
 
     
 }
@@ -511,6 +511,25 @@ Function Add-AdAppRegistrations() {
     }
 }
 
+Function Add-FederatedCredential() {
+    [CmdletBinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$appRegJsonPath,
+        [Parameter(Mandatory = $false)]
+        [string]$graphApiversion = "v1.0"
+    )
+
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
+    
+    foreach ($app in $apps.applications) {
+        $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+        New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+    }
+}
+
+
 $homeTenantContext = Get-AzContext
 
 if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
@@ -518,3 +537,5 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 }
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+
+Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
