@@ -521,8 +521,12 @@ Function Add-FederatedCredential() {
     #$appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
     #Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
     #$appObjectId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
-    $appObjectId = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId -AsPlainText
-    Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
+    #$appObjectId = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId -AsPlainText
+    #Write-Host "ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId '$appObjectId'"
+
+    $appObjectId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).objectId
+
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$appObjectId'"
 
     foreach ($app in $apps.applications) {
         #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
