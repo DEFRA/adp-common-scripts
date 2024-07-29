@@ -520,11 +520,12 @@ Function Add-FederatedCredential() {
 
     #$appid = (az ad app list --display-name "ADO-DefraGovUK-ADP-SND1-ContUAA" | convertFrom-Json).appId
     #Write-Output "app id of  ADO-DefraGovUK-ADP-SND1-ContUAA $appid  "
-
+    $appObjectId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA-SP-ObjectId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
+    Write-Host "appObjectId of ADO-DefraGovUK-ADP-SND2-ContUAA '$appObjectId'"
     
     foreach ($app in $apps.applications) {
-        $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-        #New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
+        #$appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+        New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject    
     }
 }
 
@@ -537,4 +538,4 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-#Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
