@@ -534,6 +534,7 @@ Function Add-FederatedCredential() {
                 $federatedCredentialName = $credential.Name
             }                
         }
+        Write-Host "Credentials name $federatedCredentialName"
 
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials for the app registration."
