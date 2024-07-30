@@ -516,13 +516,7 @@ Function Add-FederatedCredential() {
         [string]$graphApiversion = "v1.0"
     )
 
-    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json   
-
-    Write-Output "Federated Identity Credentials exist for the app registration.1111111111111"
-
-
-
-    
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json     
 
     foreach ($app in $apps.applications) {
         $appReg = Get-AzADApplication -DisplayName $app.displayName
