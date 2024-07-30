@@ -506,6 +506,48 @@ Function Add-AdAppRegistrations() {
     }
 }
 
+Function Add-FederatedCredential() {
+    [CmdletBinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$appRegJsonPath,
+        [Parameter(Mandatory = $false)]
+        [string]$graphApiversion = "v1.0"
+    )
+
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json     
+
+    foreach ($app in $apps.applications) {
+        $appReg = Get-AzADApplication -DisplayName $app.displayName
+        Write-Host "The Object Id of $app.displayName is $appReg.id "
+
+        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+
+        $federatedCredentials | Select-Object -Property Name
+
+        Write-Host "Credentials $appFederatedIdentityCredentials"
+
+        $ficName = $app.federartedCredential.name
+        Write-Host "Subject $ficName"
+
+        $federatedCredentialName = ""
+        foreach ($credential in $federatedCredentials) {
+            if($ficName -match $credential.Name) {
+                $federatedCredentialName = $credential.Name
+            }                
+        }
+        Write-Host "Credentials name $federatedCredentialName"
+
+        if ($federatedCredentialName -eq "") {            
+            Write-Output "Creating Federated Identity Credentials for the app registration."
+            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject
+        } else {
+            Write-Output "Federated Identity Credentials $appFederatedIdentityCredentials exist for the app registration."
+        }           
+    }
+}
+
 $homeTenantContext = Get-AzContext
 
 if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
@@ -513,3 +555,5 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 }
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+
+Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
