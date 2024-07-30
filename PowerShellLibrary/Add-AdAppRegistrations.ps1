@@ -528,12 +528,12 @@ Function Add-FederatedCredential() {
         $appReg = Get-AzADApplication -DisplayName $app.displayName
         Write-Host "The Object Id of $app.displayName is $appReg.id "
 
-        $appFederatedIdentityCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+        $appFederatedIdentityCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
 
         if ($appFederatedIdentityCredentials) {
-            Write-Output "Federated Identity Credentials exist for the app registration."
+            Write-Output "Federated Identity Credentials $appFederatedIdentityCredentials exist for the app registration."
         } else {
-            Write-Output "No Federated Identity Credentials found for the app registration."
+            Write-Output "Creating Federated Identity Credentials for the app registration."
             New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject
         }           
     }
