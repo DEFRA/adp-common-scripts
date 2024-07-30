@@ -520,10 +520,7 @@ Function Add-FederatedCredential() {
 
     Write-Output "Federated Identity Credentials exist for the app registration.1111111111111"
 
-    # Install Microsoft Graph Module if not already installed
-    if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
-        Install-Module -Name Microsoft.Graph -Scope CurrentUser
-    }
+
 
     # Connect to Microsoft Graph
     Connect-MgGraph -Scopes "Application.Read.All"
