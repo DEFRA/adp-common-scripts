@@ -548,7 +548,6 @@ Function Add-FederatedCredential() {
     }
 }
 
-
 $homeTenantContext = Get-AzContext
 
 if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
