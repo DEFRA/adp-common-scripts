@@ -528,9 +528,12 @@ Function Add-FederatedCredential() {
 
         Write-Host "Credentials $appFederatedIdentityCredentials"
 
+        $ficName = $app.federartedCredential.name
+        Write-Host "Subject $ficName"
+
         $federatedCredentialName = ""
         foreach ($credential in $federatedCredentials) {
-            if($credential.Name -eq "AZD-ADP-SND1-FSC") {
+            if($ficName -match $credential.Name) {
                 $federatedCredentialName = $credential.Name
             }                
         }
