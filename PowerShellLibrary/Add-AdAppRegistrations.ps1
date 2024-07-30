@@ -518,6 +518,8 @@ Function Add-FederatedCredential() {
 
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json   
 
+    Write-Output "Federated Identity Credentials exist for the app registration.1111111111111"
+
     # Install Microsoft Graph Module if not already installed
     if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
         Install-Module -Name Microsoft.Graph -Scope CurrentUser
@@ -525,13 +527,13 @@ Function Add-FederatedCredential() {
 
     # Connect to Microsoft Graph
     Connect-MgGraph -Scopes "Application.Read.All"
-
+     Write-Output "Federated Identity Credentials exist for the app registration.222222222222"
     # Define your App Registration ID
-    $appRegId = "YourAppId"
+    $appRegId = "bd055de4-122a-45ed-bccd-79d950d069ed"
 
     # Get the App RegistrationappId
     $app1 = Get-MgApplication -Filter "appId  eq '$appRegId'"
-
+     Write-Output "Federated Identity Credentials exist for the app registration.3333333333333"
     # Check for Federated Identity Credentials
     $appFederatedIdentityCredentials = Get-MgApplicationFederatedIdentityCredential -ApplicationId $app1.Id
 
