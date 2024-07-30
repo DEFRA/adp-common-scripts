@@ -518,6 +518,29 @@ Function Add-FederatedCredential() {
 
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json   
 
+    # Install Microsoft Graph Module if not already installed
+    if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
+        Install-Module -Name Microsoft.Graph -Scope CurrentUser
+    }
+
+    # Connect to Microsoft Graph
+    Connect-MgGraph -Scopes "Application.Read.All"
+
+    # Define your App Registration ID
+    $appRegId = "YourAppId"
+
+    # Get the App RegistrationappId
+    $app1 = Get-MgApplication -Filter "appId  eq '$appRegId'"
+
+    # Check for Federated Identity Credentials
+    $appFederatedIdentityCredentials = Get-MgApplicationFederatedIdentityCredential -ApplicationId $app1.Id
+
+    if ($appFederatedIdentityCredentials) {
+        Write-Output "Federated Identity Credentials exist for the app registration."
+    } else {
+        Write-Output "No Federated Identity Credentials found for the app registration."
+    }
+
     foreach ($app in $apps.applications) {
         $appReg = Get-AzADApplication -DisplayName $app.displayName
         Write-Host "The Object Id of $app.displayName is $appReg.id "
