@@ -535,6 +535,7 @@ Function Add-FederatedCredential() {
         foreach ($credential in $federatedCredentials) {
             if($ficName -match $credential.Name) {
                 $federatedCredentialName = $credential.Name
+                break
             }                
         }
         Write-Host "Credentials name $federatedCredentialName"
