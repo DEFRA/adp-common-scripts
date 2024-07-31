@@ -4,7 +4,9 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestStorageAccountName,
     [Parameter(Mandatory = $false)]
-    [string]$AppRegManifestContainerName
+    [string]$AppRegManifestContainerName,
+    [Parameter(Mandatory = $false)]
+    [bool]$federatedCredential
 )
 
 # sourcing additional functions from file
@@ -583,5 +585,8 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 }
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+if(federatedCredential)
+{
+    Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+}
 
-Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
