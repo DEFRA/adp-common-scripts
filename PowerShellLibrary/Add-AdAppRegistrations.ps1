@@ -529,11 +529,11 @@ Function Add-FederatedCredential() {
         Write-Host "Credentials $appFederatedIdentityCredentials"
 
         $ficName = $app.federartedCredential.name
-        Write-Host "Subject $ficName"
+        Write-Host "federated credential name: $ficName"
 
         $federatedCredentialName = ""
         foreach ($credential in $federatedCredentials) {
-            if($ficName -match $credential.Name) {
+            if($ficName -eq $credential.Name) {
                 $federatedCredentialName = $credential.Name
                 break
             }                
