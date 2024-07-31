@@ -535,9 +535,42 @@ Function Add-FederatedCredential() {
             }                
         }
 
+        # Initialize az devops commands
+        [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+        [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
+        [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
+        Write-Debug "${functionName}:devopsOrgnizationUri=$devopsOrgnizationUri"
+        Write-Debug "${functionName}:devopsProjectName=$devopsProjectName"
+        Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
+     
+        $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+ 
+        az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName    
+ 
+        if ($LASTEXITCODE -ne 0) {
+            throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
+        }
+
+        $organizationId = az devops organization list --org $devopsOrgnizationUri -o tsv
+
+        Write-Host "Organization Id: $organizationId"
+
+        $ficName =  $app.displayName + "-fic"
+        $issuer = "https://vstoken.dev.azure.com/" + $organizationId
+        $subject = "sc://defragovuk/DEFRA-FFC/" + $app.subscriptionName + "-FSC"
+        $audience = "api://AzureADTokenExchange"
+
+
+        Write-Host "ficName : $ficName"
+        Write-Host "issuer : $issuer"
+        Write-Host "subject : $subject"
+        Write-Host "audience : $audience"
+
+        # 0843dc02-bf94-4c0c-b0ed-bb5f8c829f46
+
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
-            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject
+            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
         } else {
             Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
         }           
