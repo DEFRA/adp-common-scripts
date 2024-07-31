@@ -520,7 +520,7 @@ Function Add-FederatedCredential() {
 
     foreach ($app in $apps.applications) {
         $appReg = Get-AzADApplication -DisplayName $app.displayName
-        Write-Host "The Object Id of $app.displayName is $appReg.id "
+        Write-Host "The Object Id of '$app.displayName' is '$appReg.id' "
 
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
 
