@@ -530,7 +530,7 @@ Function Add-FederatedCredential() {
 
     az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName  
 
-    $organizationId = az devops organization list --org "defragovuk" -o tsv
+    $organizationId = az devops organization list  -o tsv
     Write-Host "Organization Id: $organizationId"
 
     if ($LASTEXITCODE -ne 0) {
@@ -581,6 +581,6 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
     Write-Warning "AppRegManifestStorageAccountName and AppRegManifestContainerName are no longer required.  The Secret Renewal app now stores manifest data with the app registration in the notes property"
 }
 
-Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+#Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
 Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
