@@ -526,8 +526,6 @@ Function Add-FederatedCredential() {
 
         $federatedCredentials | Select-Object -Property Name
 
-        Write-Host "Credentials $appFederatedIdentityCredentials"
-
         $ficName = $app.federartedCredential.name
         Write-Host "federated credential name: $ficName"
 
@@ -544,7 +542,7 @@ Function Add-FederatedCredential() {
             Write-Output "Creating Federated Identity Credentials for the app registration."
             New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $app.federartedCredential.audience -Issuer $app.federartedCredential.issuer -name $app.federartedCredential.name -Subject $app.federartedCredential.subject
         } else {
-            Write-Output "Federated Identity Credentials $appFederatedIdentityCredentials exist for the app registration."
+            Write-Output "Federated Identity Credentials $federatedCredentialName exist for the app registration."
         }           
     }
 }
