@@ -518,26 +518,8 @@ Function Add-FederatedCredential() {
         [string]$graphApiversion = "v1.0"
     )
 
-    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json  
-
-    # # Initialize az devops commands
-    # [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-    # [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
-    # [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
-    # Write-Debug "${functionName}:devopsOrgnizationUri=$devopsOrgnizationUri"
-    # Write-Debug "${functionName}:devopsProjectName=$devopsProjectName"
-    # Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
- 
-    # $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
-
-    # az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName  
-
-    # $organizationId = az devops organization list  -o tsv
-    # Write-Host "Organization Id: $organizationId"
-
-    # if ($LASTEXITCODE -ne 0) {
-    #     throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
-    # }
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
+    
     foreach ($app in $apps.applications) {
         $appReg = Get-AzADApplication -DisplayName $app.displayName       
 
@@ -557,17 +539,12 @@ Function Add-FederatedCredential() {
                 $federatedCredentialName = $credential.Name
                 break
             }                
-        }       
-
-        
-
+        }
 
         Write-Host "ficName : $ficName"
         Write-Host "issuer : $issuer"
         Write-Host "subject : $subject"
         Write-Host "audience : $audience"
-
-        # 0843dc02-bf94-4c0c-b0ed-bb5f8c829f46
 
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
