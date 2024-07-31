@@ -582,6 +582,6 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
     Write-Warning "AppRegManifestStorageAccountName and AppRegManifestContainerName are no longer required.  The Secret Renewal app now stores manifest data with the app registration in the notes property"
 }
 
-#Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
 Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
