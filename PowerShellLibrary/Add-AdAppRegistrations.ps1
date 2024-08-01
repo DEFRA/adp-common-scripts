@@ -526,9 +526,17 @@ Function Add-FederatedCredential() {
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
 
-        $ficName =  $app.displayName + "-fic"
+        [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+        [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
+        [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
+
+        Write-Host "devopsOrgnizationUri: $devopsOrgnizationUri"
+        Write-Host "devopsProjectName: $devopsProjectName"
+        Write-Host "devopsProjectId: $devopsProjectId"
+
+        $ficName =  $app.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
-        $subject = "sc://defragovuk/DEFRA-FFC/" + $app.subscriptionName + "-FSC"
+        $subject = "sc://defragovuk/DEFRA-FFC/" + $app.subscriptionName
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
