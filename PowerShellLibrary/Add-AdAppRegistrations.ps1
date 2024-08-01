@@ -530,7 +530,7 @@ Function Add-FederatedCredential() {
         [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
 
         $devopsOrganizationName = $devopsOrgnizationUri.substring(22)
-        $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }      
+        $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
 
         Write-Host "devopsOrgnizationUri: $devopsOrgnizationUri"
         Write-Host "devopsProjectName: $devopsProjectName"
