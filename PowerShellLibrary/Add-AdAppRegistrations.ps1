@@ -528,23 +528,18 @@ Function Add-FederatedCredential() {
 
         [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
         [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
-        [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
 
-        $organizationName = $devopsOrgnizationUri.substring(22)
-        $organizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
-
-        #https://dev.azure.com/defragovuk/
-        
+        $devopsOrganizationName = $devopsOrgnizationUri.substring(22)
+        $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }      
 
         Write-Host "devopsOrgnizationUri: $devopsOrgnizationUri"
         Write-Host "devopsProjectName: $devopsProjectName"
-        Write-Host "organizationName: $organizationName"
+        Write-Host "organizationName: $devopsOrganizationName"
 
         $ficName =  $app.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
-        $subject = "sc://defragovuk/DEFRA-FFC/" + $app.subscriptionName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $app.subscriptionName
         $audience = "api://AzureADTokenExchange"
-        https://dev.azure.com/defragovuk/
       
         Write-Host "Federated credential name: $ficName"
 
