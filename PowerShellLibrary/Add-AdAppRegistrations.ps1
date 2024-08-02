@@ -6,7 +6,7 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestContainerName,
     [Parameter(Mandatory = $false)]
-    [bool]$federatedCredential
+    [bool]$federatedCredential = $False
 )
 
 # sourcing additional functions from file
@@ -274,33 +274,31 @@ Function Set-AadApp {
         Write-Output "Creating Application '$($app.displayName)'"
         $application = Invoke-RestMethod -Method Post -Headers $headers -Uri $applicationsUri -Body $applicationBody
 
-        if($federatedCredential -eq $False)
-        {
-            $servicePrincipals = Invoke-RestMethod -Method GET -Headers $headers -Uri $($servicePrincipalUri + $filter -f $($app.displayName))
-            if ($servicePrincipals.value.Length -eq 0) {
-                $spJson = @{}
-                $spJson.Add("appId", $application.appId)
-                if ($app.appRoles) {
-                    $spJson.Add("appRoleAssignmentRequired", $True)
-                }
-
-                Write-Output "Creating Service Principal for '$($app.displayName)'"
-                $principal = Invoke-RestMethod -Method Post -Headers $headers -Uri $servicePrincipalUri -Body ($spJson | ConvertTo-Json -Depth 100)
+        $servicePrincipals = Invoke-RestMethod -Method GET -Headers $headers -Uri $($servicePrincipalUri + $filter -f $($app.displayName))
+        if ($servicePrincipals.value.Length -eq 0) {
+            $spJson = @{}
+            $spJson.Add("appId", $application.appId)
+            if ($app.appRoles) {
+                $spJson.Add("appRoleAssignmentRequired", $True)
             }
 
-            if ($app.keyVault) {
-                foreach ($secret in $app.keyVault.secrets) {
-                    New-AppRegSecretInAadAndKeyVault -headers $headers -app $app -applicationsUri $applicationsUri -application $application -principal $principal -secret $secret -DefaultProfile $ProfileForKeyVault
-                }
-            }
+            Write-Output "Creating Service Principal for '$($app.displayName)'"
+            $principal = Invoke-RestMethod -Method Post -Headers $headers -Uri $servicePrincipalUri -Body ($spJson | ConvertTo-Json -Depth 100)
+        }
 
-        }        
+        if ($app.keyVault) {
+            foreach ($secret in $app.keyVault.secrets) {
+                New-AppRegSecretInAadAndKeyVault -headers $headers -app $app -applicationsUri $applicationsUri -application $application -principal $principal -secret $secret -DefaultProfile $ProfileForKeyVault
+            }
+        }
+
+       
     }
     else {
         Write-Output "Updating Application '$($app.displayName)'"
         Invoke-RestMethod -Method Patch -Headers $headers -Uri "$applicationsUri/$($application.id)" -Body $applicationBody | Out-Null
 
-        if ($app.keyVault -and ($federatedCredential -eq $False)) {
+        if ($app.keyVault) {
             Write-Output "Reading Service Principal for '$($app.displayName)'"
             $spnReadUrl = "$servicePrincipalUri(appId='$($application.appId)')"
             $principal = Invoke-RestMethod -Method Get -Headers $headers -Uri $spnReadUrl
