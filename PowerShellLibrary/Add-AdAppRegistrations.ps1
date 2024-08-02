@@ -291,8 +291,6 @@ Function Set-AadApp {
                 New-AppRegSecretInAadAndKeyVault -headers $headers -app $app -applicationsUri $applicationsUri -application $application -principal $principal -secret $secret -DefaultProfile $ProfileForKeyVault
             }
         }
-
-       
     }
     else {
         Write-Output "Updating Application '$($app.displayName)'"
@@ -579,4 +577,3 @@ if($federatedCredential -eq $True)
 {
     Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
 }
-
