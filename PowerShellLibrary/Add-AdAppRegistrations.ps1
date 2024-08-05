@@ -573,7 +573,7 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-if($federatedCredential -eq $True)
-{
-    Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
-}
+# if($federatedCredential -eq $True)
+# {
+#     Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+# }
