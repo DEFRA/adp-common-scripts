@@ -4,9 +4,7 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestStorageAccountName,
     [Parameter(Mandatory = $false)]
-    [string]$AppRegManifestContainerName,
-    [Parameter(Mandatory = $false)]
-    [bool]$federatedCredential = $False
+    [string]$AppRegManifestContainerName
 )
 
 # sourcing additional functions from file
