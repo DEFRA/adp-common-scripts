@@ -519,7 +519,8 @@ Function Add-FederatedCredential() {
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
     
     foreach ($app in $apps.applications) {
-        $appReg = Get-AzADApplication -DisplayName $app.displayName       
+        $appReg = Get-AzADApplication -DisplayName $app.displayName 
+        Write-Host "appReg: ============= $appReg"      
 
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
