@@ -4,7 +4,9 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestStorageAccountName,
     [Parameter(Mandatory = $false)]
-    [string]$AppRegManifestContainerName
+    [string]$AppRegManifestContainerName,
+    [Parameter(Mandatory = $false)]
+    [bool]$federatedCredential
 )
 
 # sourcing additional functions from file
@@ -511,9 +513,7 @@ Function Add-FederatedCredential() {
     Param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$appRegJsonPath,
-        [Parameter(Mandatory = $false)]
-        [string]$graphApiversion = "v1.0"
+        [string]$appRegJsonPath        
     )
 
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
@@ -554,11 +554,12 @@ Function Add-FederatedCredential() {
         Write-Host "subject : $subject"
         Write-Host "audience : $audience"
 
-        if ($federatedCredentialName -eq "") {            
+        if ($federatedCredentialName) {    
+            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"        
+           
+        } else {
             Write-Output "Creating Federated Identity Credentials $ficName"
             New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
-        } else {
-            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
         }           
     }
 }
@@ -571,7 +572,7 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-# if($federatedCredential -eq $True)
-# {
-#     Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
-# }
+if($federatedCredential)
+{
+    Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+}
