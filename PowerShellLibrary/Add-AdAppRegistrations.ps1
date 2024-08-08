@@ -519,8 +519,7 @@ Function Add-FederatedCredential() {
     $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
     
     foreach ($app in $apps.applications) {
-        $appReg = Get-AzADApplication -DisplayName $app.displayName 
-        Write-Host "appReg: ============= $appReg"      
+        $appReg = Get-AzADApplication -DisplayName $app.displayName     
 
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
@@ -535,10 +534,9 @@ Function Add-FederatedCredential() {
         Write-Host "devopsProjectName: $devopsProjectName"
         Write-Host "organizationName: $devopsOrganizationName"
 
-        $fname = "TEST4"
-        $ficName =  $fname #$app.subscriptionName
+        $ficName =  $app.subscriptionName
         $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" +  $fname #$app.subscriptionName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $app.subscriptionName
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
