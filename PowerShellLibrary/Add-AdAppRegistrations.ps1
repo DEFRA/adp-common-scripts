@@ -530,13 +530,11 @@ Function Add-FederatedCredential() {
 
         Write-Host "devopsOrgnizationUri: $devopsOrgnizationUri"
         Write-Host "devopsProjectName: $devopsProjectName"
-        Write-Host "organizationName: $devopsOrganizationName"
+        Write-Host "organizationName: $devopsOrganizationName"       
 
-        $fc = "TEST5"
-
-        $ficName =  $fc #$app.subscriptionName
+        $ficName =  $app.subscriptionName
         $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $fc #$app.subscriptionName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $app.subscriptionName
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
