@@ -4,7 +4,9 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestStorageAccountName,
     [Parameter(Mandatory = $false)]
-    [string]$AppRegManifestContainerName
+    [string]$AppRegManifestContainerName,
+    [Parameter(Mandatory = $false)]
+    [bool]$federatedCredential
 )
 
 # sourcing additional functions from file
@@ -506,6 +508,62 @@ Function Add-AdAppRegistrations() {
     }
 }
 
+Function Add-FederatedCredential() {
+    [CmdletBinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$appRegJsonPath        
+    )
+
+    $apps = Get-Content -Raw -Path $appRegJsonPath | ConvertFrom-Json
+    
+    foreach ($app in $apps.applications) {
+        $appReg = Get-AzADApplication -DisplayName $app.displayName     
+
+        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        $federatedCredentials | Select-Object -Property Name
+
+        [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+        [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
+
+        $devopsOrganizationName = $devopsOrgnizationUri.substring(22)
+        $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
+
+        Write-Host "devopsOrgnizationUri: $devopsOrgnizationUri"
+        Write-Host "devopsProjectName: $devopsProjectName"
+        Write-Host "organizationName: $devopsOrganizationName"
+
+        $ficName =  $app.subscriptionName
+        $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
+        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $app.subscriptionName
+        $audience = "api://AzureADTokenExchange"
+      
+        Write-Host "Federated credential name: $ficName"
+
+        $federatedCredentialName = ""
+        foreach ($credential in $federatedCredentials) {
+            if($ficName -eq $credential.Name) {
+                $federatedCredentialName = $credential.Name
+                break
+            }                
+        }
+
+        Write-Host "ficName : $ficName"
+        Write-Host "issuer : $issuer"
+        Write-Host "subject : $subject"
+        Write-Host "audience : $audience"
+
+        if ($federatedCredentialName) {    
+            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"        
+           
+        } else {
+            Write-Output "Creating Federated Identity Credentials $ficName"
+            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
+        }           
+    }
+}
+
 $homeTenantContext = Get-AzContext
 
 if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
@@ -513,3 +571,8 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 }
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
+
+if($federatedCredential)
+{
+    Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
+}
