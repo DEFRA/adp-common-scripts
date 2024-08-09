@@ -4,9 +4,7 @@ Param (
     [Parameter(Mandatory = $false)]
     [string]$AppRegManifestStorageAccountName,
     [Parameter(Mandatory = $false)]
-    [string]$AppRegManifestContainerName,
-    [Parameter(Mandatory = $false)]
-    [bool]$federatedCredential
+    [string]$AppRegManifestContainerName
 )
 
 # sourcing additional functions from file
@@ -534,9 +532,11 @@ Function Add-FederatedCredential() {
         Write-Host "devopsProjectName: $devopsProjectName"
         Write-Host "organizationName: $devopsOrganizationName"
 
-        $ficName =  $app.subscriptionName
+        $fc = "TEST"
+
+        $ficName =  $fc #$app.subscriptionName
         $issuer = "https://vstoken.dev.azure.com/" + $app.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $app.subscriptionName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $devopsProjectName + "/" + $fc #$app.subscriptionName
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
@@ -572,7 +572,4 @@ if ($AppRegManifestStorageAccountName -or $AppRegManifestContainerName) {
 
 Add-AdAppRegistrations -appRegJsonPath $AppRegJsonPath
 
-if($federatedCredential)
-{
-    Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
-}
+Add-FederatedCredential -appRegJsonPath  $AppRegJsonPath
